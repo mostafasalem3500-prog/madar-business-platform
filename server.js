@@ -7,6 +7,8 @@ const port = Number(process.env.PORT || 3000);
 const publicFiles = new Set([
   'index.html', 'admin.html', 'app.js', 'admin.js', 'site-config.js', 'admin.css',
   'madar-style-00.css', 'madar-style-01.css', 'madar-style-02.css', 'madar-style-03.css',
+  'assets/images/saudi-business-establishment.svg', 'assets/images/company-formation.svg',
+  'assets/images/governance-kpi.svg', 'assets/images/feasibility-study.svg',
   'favicon.ico', 'robots.txt'
 ]);
 const mime = {
