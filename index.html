@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
   <a class="skip" href="#main">تجاوز إلى المحتوى</a>
   <div class="topbar">
     <div class="container topbar-inner"><span>خدمات موثوقة للأفراد وقطاع الأعمال</span><div><a href="#track">تتبّع طلبك</a><span>السبت–الخميس، 9 ص–5 م</span><button class="lang" type="button">EN</button></div></div>
@@ -58,11 +59,15 @@
     <section class="visual-story section" aria-label="قطاعات نخدمها">
       <div class="container"><div class="section-head reveal"><div class="eyebrow"><span></span> خبرة تفهم بيئة الأعمال</div><h2>حلول مصممة لواقع منشأتك</h2><p>من التأسيس والإجراءات إلى بناء منظومة مؤسسية جاهزة للنمو.</p></div>
       <div class="visual-grid">
-        <article class="visual-card visual-wide reveal"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1400&q=82" alt="مبانٍ حديثة تمثل نمو قطاع الأعمال" loading="lazy"><div><span>الشركات والاستثمار</span><h3>تأسيس يراعي ما بعد إصدار السجل</h3><p>نربط الكيان القانوني بالتراخيص والتشغيل وخطة النمو.</p></div></article>
-        <article class="visual-card reveal delay-1"><img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1000&q=82" alt="مساحة عمل حديثة" loading="lazy"><div><span>التشغيل</span><h3>إجراءات واضحة وفريق أكثر تنظيمًا</h3></div></article>
-        <article class="visual-card reveal delay-2"><img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1000&q=82" alt="فريق عمل يناقش خطة على لوحة" loading="lazy"><div><span>التطوير المؤسسي</span><h3>استراتيجية تتحول إلى عمل قابل للقياس</h3></div></article>
+        <article class="visual-card visual-wide reveal tilt"><img src="https://www.hyphenksa.com/assets/img/projects/project1.jpg" alt="مركز الملك عبدالله المالي في الرياض دون أشخاص" loading="lazy"><div><span>الشركات والاستثمار</span><h3>تأسيس يراعي ما بعد إصدار السجل</h3><p>نربط الكيان القانوني بالتراخيص والتشغيل وخطة النمو.</p></div></article>
+        <article class="visual-card reveal delay-1 tilt"><img src="https://www.candpco.com/static/projects/UCI_1.jpg" alt="مكتب أعمال حديث في الرياض دون أشخاص" loading="lazy"><div><span>التشغيل</span><h3>بيئة أكثر تنظيمًا وإجراءات أوضح</h3></div></article>
+        <article class="visual-card reveal delay-2 tilt"><img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1000&q=82" alt="عمارة أعمال حديثة دون أشخاص" loading="lazy"><div><span>التطوير المؤسسي</span><h3>استراتيجية تتحول إلى عمل قابل للقياس</h3></div></article>
       </div></div>
     </section>
+
+    <section class="sector-marquee" aria-label="القطاعات المستهدفة"><div class="marquee-track"><span>الشركات الناشئة</span><i></i><span>المقاولات</span><i></i><span>التجزئة</span><i></i><span>الخدمات المهنية</span><i></i><span>التجارة الإلكترونية</span><i></i><span>القطاع غير الربحي</span><i></i><span>الصناعة</span><i></i><span>الضيافة والسياحة</span><i></i><span>الشركات الناشئة</span><i></i><span>المقاولات</span><i></i><span>التجزئة</span><i></i><span>الخدمات المهنية</span><i></i></div></section>
+
+    <section class="saudi-value section"><div class="container value-grid"><div class="value-visual reveal"><div class="vision-shape"><span>2030</span><small>نمو أكثر تنظيمًا</small></div><div class="orbit-chip chip-a">امتثال</div><div class="orbit-chip chip-b">كفاءة</div><div class="orbit-chip chip-c">استدامة</div></div><div class="value-copy reveal delay-1"><div class="eyebrow"><span></span> نفهم السوق السعودي</div><h2>حلول عملية تراعي رحلة المنشأة داخل المملكة</h2><p>نجمع بين فهم الإجراءات، البناء المؤسسي، والقياس الرقمي لنساعدك على تأسيس عملك وتشغيله وتطويره ضمن مسار واضح.</p><div class="value-points"><article><b>01</b><div><h3>سياق محلي</h3><p>خدمات منظمة حسب احتياج المنشأة والجهة ذات العلاقة.</p></div></article><article><b>02</b><div><h3>تنفيذ قابل للقياس</h3><p>حالة طلب واضحة، مسؤوليات محددة، ومخرجات موثقة.</p></div></article><article><b>03</b><div><h3>جاهزية للنمو</h3><p>من التأسيس إلى الحوكمة والجودة والتحول الرقمي.</p></div></article></div></div></div></section>
 
     <section class="finder section" id="services">
       <div class="container">
@@ -119,6 +124,7 @@
   <div class="dashboard-modal" id="dashboardModal" aria-hidden="true"><div class="modal-backdrop"></div><div class="dash-shell"><button class="dash-close">×</button><aside><div class="brand mini"><span class="brand-mark"><i></i><i></i><i></i></span><b>مَدار</b></div><button class="active">⌂ <span>نظرة عامة</span></button><button>⌁ <span>طلباتي</span></button><button>▱ <span>المستندات</span></button><button>▤ <span>الفواتير</span></button><button>◌ <span>الرسائل</span></button></aside><main><div class="dash-title"><div><small>لوحة العميل التجريبية</small><h2>مرحبًا، محمد</h2></div><span class="avatar">م</span></div><div class="dash-kpis"><div><small>طلبات نشطة</small><b>4</b><span>طلبان هذا الشهر</span></div><div><small>مكتملة</small><b>12</b><span>منذ بداية الحساب</span></div><div><small>مستندات مطلوبة</small><b>2</b><span class="warn">تحتاج إلى إجراء</span></div></div><div class="dash-table"><h3>الطلبات الأخيرة</h3><div class="table-row head"><span>الخدمة</span><span>رقم الطلب</span><span>الحالة</span><span>التقدم</span></div><div class="table-row"><b>تأسيس شركة ذات مسؤولية محدودة</b><span>MD-2048</span><span class="status">قيد التنفيذ</span><span>72%</span></div><div class="table-row"><b>تسجيل علامة تجارية</b><span>MD-1983</span><span class="status review">تحت المراجعة</span><span>45%</span></div><div class="table-row"><b>تجديد رخصة بلدية</b><span>MD-1755</span><span class="status done-status">مكتمل</span><span>100%</span></div></div></main></div></div>
   <div class="service-modal" id="serviceModal" aria-hidden="true"><div class="modal-backdrop"></div><article class="service-detail"><button class="service-close" aria-label="إغلاق">×</button><span class="service-detail-icon" id="detailIcon">▦</span><small>خدمة أعمال متكاملة</small><h2 id="detailTitle">تأسيس الشركات</h2><p id="detailDesc"></p><div class="detail-points"><span>✓ مراجعة أولية للاحتياج</span><span>✓ تحديد المتطلبات بوضوح</span><span>✓ متابعة رقمية لكل مرحلة</span><span>✓ تسليم موثق ودعم لاحق</span></div><div class="detail-note">المدة والسعر يحددان بعد مراجعة الحالة والمستندات؛ لا توجد رسوم مخفية.</div><button class="btn btn-primary detail-order">اطلب هذه الخدمة <span>←</span></button></article></div>
   <div class="toast" id="toast"></div>
+  <a class="whatsapp-float" href="https://wa.me/966500000000" aria-label="تواصل عبر واتساب"><span>◔</span><b>تحدث معنا</b></a><button class="back-top" id="backTop" aria-label="العودة إلى أعلى">↑</button>
   <script src="site-config.js"></script>
   <script src="app.js"></script>
 </body>
