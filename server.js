@@ -1,83 +1,64 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const root = __dirname;
 const port = Number(process.env.PORT || 3000);
-const publicFiles = new Set([
-  'index.html', 'admin.html', 'app.js', 'admin.js', 'site-config.js', 'admin.css',
-  'madar-style-00.css', 'madar-style-01.css', 'madar-style-02.css', 'madar-style-03.css',
-  'assets/images/saudi-business-establishment.svg', 'assets/images/company-formation.svg',
-  'assets/images/governance-kpi.svg', 'assets/images/feasibility-study.svg',
-  'favicon.ico', 'robots.txt'
-]);
-const mime = {
-  '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.js': 'application/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.svg': 'image/svg+xml',
-  '.webp': 'image/webp',
-  '.png': 'image/png',
-  '.ico': 'image/x-icon'
-};
+const dataDir = path.resolve(process.env.DATA_DIR || path.join(root, 'storage'));
+const uploadsDir = path.join(dataDir, 'uploads');
+const contentFile = path.join(dataDir, 'content.json');
+const adminPassword = String(process.env.ADMIN_PASSWORD || '');
+fs.mkdirSync(uploadsDir, {recursive:true});
 
-const securityHeaders = {
-  'content-security-policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.hyphenksa.com https://www.candpco.com https://images.unsplash.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests",
-  'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
-  'strict-transport-security': 'max-age=31536000; includeSubDomains',
-  'cross-origin-opener-policy': 'same-origin',
-  'x-content-type-options': 'nosniff',
-  'x-frame-options': 'SAMEORIGIN',
-  'referrer-policy': 'strict-origin-when-cross-origin'
-};
+const defaultServices=[
+  {id:1,cat:'startup',icon:'▦',title:'تأسيس الشركات',desc:'من اختيار الكيان حتى إصدار السجل وتجهيز المنشأة للتشغيل.',color:'#e5f5ff'},
+  {id:2,cat:'government',icon:'⌁',title:'الخدمات الحكومية',desc:'تنفيذ ومتابعة معاملات المنشأة عبر الجهات والمنصات ذات العلاقة.',color:'#e8f9f5'},
+  {id:3,cat:'government',icon:'٪',title:'الزكاة والضريبة',desc:'خدمات التسجيل والإقرارات والمتابعة المحاسبية للمنشآت.',color:'#fff5dd'},
+  {id:4,cat:'government',icon:'♙',title:'الموارد البشرية',desc:'خدمات قوى ومدد والتأمينات وتنظيم دورة حياة الموظف.',color:'#f0edff'},
+  {id:5,cat:'consulting',icon:'◎',title:'دراسات الجدوى',desc:'دراسة السوق والجوانب الفنية والمالية قبل قرار الاستثمار.',color:'#e5f8f8'},
+  {id:6,cat:'consulting',icon:'⌘',title:'الحوكمة والامتثال',desc:'أطر واضحة للصلاحيات والسياسات والمخاطر واستدامة القرار.',color:'#eaf0ff'},
+  {id:7,cat:'growth',icon:'↗',title:'التخطيط ومؤشرات الأداء',desc:'تحويل الرؤية إلى أهداف ومبادرات ومؤشرات قابلة للقياس.',color:'#e7f8f1'},
+  {id:8,cat:'growth',icon:'✓',title:'الجودة وشهادات ISO',desc:'تحليل الفجوات وبناء الأنظمة والتأهيل لمتطلبات الجودة.',color:'#eaf7ff'},
+  {id:9,cat:'government',icon:'⌂',title:'التراخيص البلدية والسلامة',desc:'إصدار وتجديد التراخيص ومتابعة متطلبات السلامة.',color:'#fff2e8'},
+  {id:10,cat:'growth',icon:'◈',title:'التحول الرقمي',desc:'أتمتة الإجراءات وربط البيانات وبناء لوحات قيادة للأعمال.',color:'#e9f5ff'},
+  {id:11,cat:'startup',icon:'◇',title:'خدمات المستثمرين',desc:'مسار تأسيس منظم للمستثمر السعودي والخليجي والأجنبي.',color:'#eef9e9'},
+  {id:12,cat:'government',icon:'®',title:'الملكية الفكرية',desc:'تسجيل العلامات التجارية ومتابعة الطلبات وحماية الأصول.',color:'#f7edff'}
+];
+const defaults={version:2,updatedAt:null,
+  settings:{brand:'مَدار',primary:'#1477c9',phone:'+966 50 000 0000',email:'hello@madar.sa',city:'الرياض، المملكة العربية السعودية',heroTitle:'كل ما تحتاجه منشأتك | في مسار واحد واضح.',heroSubtitle:'نؤسس أعمالك، ننفّذ معاملاتك، ونطوّر منظومتك الإدارية بمتابعة شفافة من أول طلب حتى الإنجاز.',motion:'on',motionLevel:'soft'},
+  visibility:{visualStory:true,marquee:true,saudiValue:true,method:true,services:true,journey:true,transformation:true,solutions:true,packages:true,track:true,knowledge:true,deliverables:true,faq:true,cta:true},
+  activities:[
+    {id:1,tag:'الشركات والاستثمار',title:'تأسيس يراعي ما بعد إصدار السجل',desc:'نربط الكيان القانوني بالتراخيص والتشغيل وخطة النمو.',image:'assets/images/saudi-business-establishment.svg',alt:'مكتب أعمال سعودي حديث يعبّر عن تأسيس المنشأة وتشغيلها ونموها'},
+    {id:2,tag:'التشغيل',title:'بيئة أكثر تنظيمًا وإجراءات أوضح',desc:'',image:'https://www.candpco.com/static/projects/UCI_1.jpg',alt:'مكتب أعمال حديث في الرياض دون أشخاص'},
+    {id:3,tag:'التطوير المؤسسي',title:'استراتيجية تتحول إلى عمل قابل للقياس',desc:'',image:'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1000&q=82',alt:'عمارة أعمال حديثة دون أشخاص'}],
+  articles:[
+    {id:1,tag:'دليل التأسيس',title:'كيف تختار الكيان القانوني المناسب لمشروعك؟',desc:'مقارنة عملية تساعدك على فهم الخيارات قبل بدء الإجراءات.',image:'assets/images/company-formation.svg',alt:'مكتب تأسيس شركة سعودية مع نموذج مبنى وملف أعمال',link:'#'},
+    {id:2,tag:'الحوكمة',title:'من الأهداف العامة إلى مؤشرات أداء قابلة للقياس',desc:'خطوات بناء منظومة تربط الخطة بالتنفيذ اليومي.',image:'assets/images/governance-kpi.svg',alt:'قاعة اجتماعات تنفيذية ولوحة مؤشرات للحوكمة والأداء',link:'#'},
+    {id:3,tag:'دراسات الجدوى',title:'ما الذي يجعل دراسة الجدوى قابلة لاتخاذ القرار؟',desc:'العناصر المالية والسوقية والتشغيلية التي لا ينبغي تجاهلها.',image:'assets/images/feasibility-study.svg',alt:'تحليل دراسة جدوى مع مخططات مالية ومعمارية لمدينة سعودية',link:'#'}],services:defaultServices};
 
-function send(response, status, body, extra = {}) {
-  response.writeHead(status, {...securityHeaders, 'content-type': 'text/plain; charset=utf-8', ...extra});
-  response.end(body);
-}
+const publicFiles=new Set(['index.html','admin.html','app.js','admin.js','site-config.js','admin.css','madar-style-00.css','madar-style-01.css','madar-style-02.css','madar-style-03.css','assets/images/saudi-business-establishment.svg','assets/images/company-formation.svg','assets/images/governance-kpi.svg','assets/images/feasibility-study.svg','favicon.ico','robots.txt']);
+const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'application/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.svg':'image/svg+xml','.webp':'image/webp','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.ico':'image/x-icon'};
+const securityHeaders={'content-security-policy':"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://www.hyphenksa.com https://www.candpco.com https://images.unsplash.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests",'permissions-policy':'camera=(), microphone=(), geolocation=(), payment=(), usb=()','strict-transport-security':'max-age=31536000; includeSubDomains','cross-origin-opener-policy':'same-origin','x-content-type-options':'nosniff','x-frame-options':'SAMEORIGIN','referrer-policy':'strict-origin-when-cross-origin'};
+const sessions=new Map(),attempts=new Map();
+function clean(value,max=300){return String(value??'').replace(/[\u0000-\u001f\u007f]/g,'').trim().slice(0,max)}
+function json(res,status,value,extra={}){res.writeHead(status,{...securityHeaders,'content-type':'application/json; charset=utf-8','cache-control':'no-store',...extra});res.end(JSON.stringify(value))}
+function send(res,status,body,extra={}){res.writeHead(status,{...securityHeaders,'content-type':'text/plain; charset=utf-8',...extra});res.end(body)}
+function readContent(){try{return {...defaults,...JSON.parse(fs.readFileSync(contentFile,'utf8'))}}catch{return structuredClone(defaults)}}
+function atomicWrite(value){const temp=contentFile+'.tmp';fs.writeFileSync(temp,JSON.stringify(value,null,2));fs.renameSync(temp,contentFile)}
+function parseCookies(req){return Object.fromEntries(String(req.headers.cookie||'').split(';').map(x=>x.trim().split('=')).filter(x=>x.length===2))}
+function isAdmin(req){const token=parseCookies(req).madar_admin,expiry=sessions.get(token);if(!expiry||expiry<Date.now()){if(token)sessions.delete(token);return false}return true}
+function readJson(req,limit=3_000_000){return new Promise((resolve,reject)=>{let size=0,data='';req.on('data',chunk=>{size+=chunk.length;if(size>limit){reject(new Error('large'));req.destroy();return}data+=chunk});req.on('end',()=>{try{resolve(JSON.parse(data||'{}'))}catch{reject(new Error('json'))}});req.on('error',reject)})}
+function normalizeContent(input){const current=readContent(),settings=input?.settings||{},visibility=input?.visibility||{};const safeImage=value=>{const v=clean(value,500);return /^(?:\/uploads\/[a-z0-9._-]+|assets\/images\/[a-z0-9._-]+|https:\/\/(?:www\.candpco\.com|images\.unsplash\.com)\/)/i.test(v)?v:''};const item=(x,i,type)=>({id:Number(x?.id)||Date.now()+i,tag:clean(x?.tag,40),title:clean(x?.title,120),desc:clean(x?.desc,260),image:safeImage(x?.image),alt:clean(x?.alt,160),...(type==='article'?{link:/^(?:#|https:\/\/)/.test(clean(x?.link,500))?clean(x?.link,500):'#'}:{})});const service=(x,i)=>({id:Number(x?.id)||Date.now()+i,cat:['startup','government','consulting','growth'].includes(x?.cat)?x.cat:'consulting',icon:clean(x?.icon,3)||'✦',title:clean(x?.title,80)||'خدمة أعمال',desc:clean(x?.desc,220),color:/^#[0-9a-f]{6}$/i.test(x?.color)?x.color:'#e8f5fd'});return {version:2,updatedAt:new Date().toISOString(),settings:{brand:clean(settings.brand,40)||current.settings.brand,primary:/^#[0-9a-f]{6}$/i.test(settings.primary)?settings.primary:'#1477c9',phone:clean(settings.phone,24),email:clean(settings.email,100),city:clean(settings.city,100),heroTitle:clean(settings.heroTitle,140),heroSubtitle:clean(settings.heroSubtitle,300),motion:settings.motion==='off'?'off':'on',motionLevel:settings.motionLevel==='rich'?'rich':'soft'},visibility:Object.fromEntries(Object.keys(defaults.visibility).map(k=>[k,visibility[k]!==false])),activities:(Array.isArray(input?.activities)?input.activities:current.activities).slice(0,6).map((x,i)=>item(x,i,'activity')),articles:(Array.isArray(input?.articles)?input.articles:current.articles).slice(0,9).map((x,i)=>item(x,i,'article')),services:(Array.isArray(input?.services)?input.services:current.services).slice(0,100).map(service)}}
 
-http.createServer((request, response) => {
-  if (!['GET', 'HEAD'].includes(request.method)) {
-    send(response, 405, 'الطريقة غير مسموحة', {'allow': 'GET, HEAD'});
-    return;
-  }
-  let pathname;
-  try {
-    pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
-  } catch {
-    send(response, 400, 'طلب غير صالح');
-    return;
-  }
-  if (pathname === '/health') {
-    send(response, 200, 'ok', {'cache-control': 'no-store'});
-    return;
-  }
-  const requested = pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, '');
-  if (!publicFiles.has(requested)) {
-    send(response, 404, 'الصفحة غير موجودة');
-    return;
-  }
-  const filePath = path.join(root, requested);
-  const relative = path.relative(root, filePath);
-
-  if (relative.startsWith('..') || path.isAbsolute(relative) || !fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
-    send(response, 404, 'الصفحة غير موجودة');
-    return;
-  }
-
-  const extension = path.extname(filePath).toLowerCase();
-  response.writeHead(200, {...securityHeaders,
-    'content-type': mime[extension] || 'application/octet-stream',
-    'cache-control': extension === '.html' ? 'no-cache, no-store, must-revalidate' : 'public, max-age=86400'
-  });
-  if (request.method === 'HEAD') return response.end();
-  const stream = fs.createReadStream(filePath);
-  stream.on('error', () => {
-    if (!response.headersSent) send(response, 500, 'حدث خطأ أثناء تحميل الملف');
-    else response.destroy();
-  });
-  stream.pipe(response);
-}).listen(port, '0.0.0.0', () => {
-  console.log(`Madar is running on port ${port}`);
-});
+http.createServer(async(req,res)=>{let pathname;try{pathname=decodeURIComponent(new URL(req.url,'http://localhost').pathname)}catch{return send(res,400,'طلب غير صالح')}
+  if(pathname==='/health')return send(res,200,'ok',{'cache-control':'no-store'});
+  if(pathname==='/api/content'&&req.method==='GET')return json(res,200,readContent());
+  if(pathname==='/api/admin/session'&&req.method==='GET')return json(res,200,{authenticated:isAdmin(req),configured:Boolean(adminPassword)});
+  if(pathname==='/api/admin/login'&&req.method==='POST'){const ip=req.socket.remoteAddress||'unknown',recent=(attempts.get(ip)||[]).filter(t=>Date.now()-t<900000);attempts.set(ip,recent);if(recent.length>=8)return json(res,429,{error:'محاولات كثيرة، حاول لاحقًا'});if(!adminPassword)return json(res,503,{error:'لم تُضبط كلمة مرور الإدارة بعد'});try{const body=await readJson(req,10000),supplied=Buffer.from(String(body.password||'')),expected=Buffer.from(adminPassword),valid=supplied.length===expected.length&&crypto.timingSafeEqual(supplied,expected);if(!valid){recent.push(Date.now());return json(res,401,{error:'كلمة المرور غير صحيحة'})}const token=crypto.randomBytes(32).toString('hex');sessions.set(token,Date.now()+28800000);return json(res,200,{ok:true},{'set-cookie':`madar_admin=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=28800`})}catch{return json(res,400,{error:'طلب غير صالح'})}}
+  if(pathname==='/api/admin/logout'&&req.method==='POST'){sessions.delete(parseCookies(req).madar_admin);return json(res,200,{ok:true},{'set-cookie':'madar_admin=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0'})}
+  if(pathname==='/api/admin/content'&&req.method==='PUT'){if(!isAdmin(req))return json(res,401,{error:'يلزم تسجيل الدخول'});if(req.headers['x-requested-with']!=='MadarAdmin')return json(res,403,{error:'طلب غير مصرح'});try{const value=normalizeContent(await readJson(req));atomicWrite(value);return json(res,200,value)}catch(e){return json(res,e.message==='large'?413:400,{error:e.message==='large'?'حجم البيانات كبير':'تعذر حفظ البيانات'})}}
+  if(pathname==='/api/admin/upload'&&req.method==='POST'){if(!isAdmin(req))return json(res,401,{error:'يلزم تسجيل الدخول'});if(req.headers['x-requested-with']!=='MadarAdmin')return json(res,403,{error:'طلب غير مصرح'});try{const body=await readJson(req,3_000_000),match=String(body.data||'').match(/^data:image\/(jpeg|png|webp);base64,([A-Za-z0-9+/=]+)$/);if(!match)return json(res,415,{error:'استخدم JPG أو PNG أو WebP فقط'});const buffer=Buffer.from(match[2],'base64');if(buffer.length>2_000_000)return json(res,413,{error:'الحد الأقصى للصورة 2 ميجابايت'});const ext=match[1]==='jpeg'?'jpg':match[1],name=`${Date.now()}-${crypto.randomBytes(6).toString('hex')}.${ext}`;fs.writeFileSync(path.join(uploadsDir,name),buffer,{flag:'wx'});return json(res,201,{url:`/uploads/${name}`})}catch{return json(res,400,{error:'تعذر رفع الصورة'})}}
+  if(!['GET','HEAD'].includes(req.method))return send(res,405,'الطريقة غير مسموحة',{'allow':'GET, HEAD'});
+  const requested=pathname==='/'?'index.html':pathname.replace(/^\/+/,''),isUpload=requested.startsWith('uploads/');let filePath;if(isUpload){const name=path.basename(requested);if(name!==requested.slice(8))return send(res,404,'الصفحة غير موجودة');filePath=path.join(uploadsDir,name)}else{if(!publicFiles.has(requested))return send(res,404,'الصفحة غير موجودة');filePath=path.join(root,requested)}const relative=path.relative(isUpload?uploadsDir:root,filePath);if(relative.startsWith('..')||path.isAbsolute(relative)||!fs.existsSync(filePath)||fs.statSync(filePath).isDirectory())return send(res,404,'الصفحة غير موجودة');const extension=path.extname(filePath).toLowerCase();res.writeHead(200,{...securityHeaders,'content-type':mime[extension]||'application/octet-stream','cache-control':extension==='.html'?'no-cache, no-store, must-revalidate':'public, max-age=86400'});if(req.method==='HEAD')return res.end();fs.createReadStream(filePath).on('error',()=>res.destroy()).pipe(res)
+}).listen(port,'0.0.0.0',()=>console.log(`Madar is running on port ${port}`));
