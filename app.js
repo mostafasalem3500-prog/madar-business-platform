@@ -18,7 +18,7 @@ function escapeHTML(value){return cleanText(value,500).replace(/[&<>'"]/g,c=>({'
 function safeColor(value){return /^#[0-9a-f]{6}$/i.test(String(value))?String(value):'#e8f5fd'}
 function normalizeService(s,index){return{id:Number.isFinite(+s?.id)?+s.id:index+1,cat:['startup','government','consulting','growth'].includes(s?.cat)?s.cat:'consulting',icon:cleanText(s?.icon||'✦',3),title:cleanText(s?.title||'خدمة أعمال',80),desc:cleanText(s?.desc||'',220),color:safeColor(s?.color)}}
 const savedServices=safeParse('madar_services',null);
-const services=(Array.isArray(savedServices)&&savedServices.length?savedServices:defaultServices).slice(0,100).map(normalizeService);
+let services=(Array.isArray(savedServices)&&savedServices.length?savedServices:defaultServices).slice(0,100).map(normalizeService);
 const siteSettings=safeParse('madar_settings',{});
 if(siteSettings.brand){document.querySelectorAll('.brand b').forEach(x=>x.textContent=cleanText(siteSettings.brand,40))}
 if(safeColor(siteSettings.primary)===siteSettings.primary){document.documentElement.style.setProperty('--blue',siteSettings.primary)}
@@ -53,3 +53,23 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeWizard();close
 const progressBar=document.getElementById('scrollProgress'),backTop=document.getElementById('backTop');
 addEventListener('scroll',()=>{const max=document.documentElement.scrollHeight-innerHeight;progressBar.style.width=`${max?scrollY/max*100:0}%`;backTop.classList.toggle('show',scrollY>650)});backTop.onclick=()=>scrollTo({top:0,behavior:'smooth'});
 if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.querySelectorAll('.tilt').forEach(card=>{card.addEventListener('pointermove',e=>{const r=card.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;card.style.transform=`perspective(800px) rotateY(${x*4}deg) rotateX(${-y*4}deg) translateY(-3px)`});card.addEventListener('pointerleave',()=>card.style.transform='')})}
+
+// محتوى مركزي قادم من لوحة الإدارة. تبقى القيم المضمّنة بديلًا آمنًا عند تعذر الاتصال.
+const cmsSectionSelectors={visualStory:'.visual-story',marquee:'.sector-marquee',saudiValue:'.saudi-value',method:'#method',services:'#services',journey:'#journey',transformation:'.transformation',solutions:'#solutions',packages:'#packages',track:'#track',knowledge:'#knowledge',deliverables:'.deliverables',faq:'#faq',cta:'#about'};
+function applyCMS(data){
+  if(!data||typeof data!=='object')return;
+  const settings=data.settings||{};
+  if(settings.brand)document.querySelectorAll('.brand b').forEach(x=>x.textContent=cleanText(settings.brand,40));
+  if(/^#[0-9a-f]{6}$/i.test(settings.primary||''))document.documentElement.style.setProperty('--blue',settings.primary);
+  if(settings.heroTitle){const title=document.getElementById('heroTitle'),parts=cleanText(settings.heroTitle,140).split('|');title.replaceChildren(document.createTextNode(parts.shift()||''));if(parts.length){title.append(document.createElement('br'));const em=document.createElement('em');em.textContent=parts.join(' ').trim();title.append(em)}}
+  if(settings.heroSubtitle)document.getElementById('heroSubtitle').textContent=cleanText(settings.heroSubtitle,300);
+  document.body.classList.toggle('motion-off',settings.motion==='off');document.body.classList.toggle('motion-rich',settings.motionLevel==='rich');
+  if(settings.phone){const digits=settings.phone.replace(/\D/g,'');document.querySelectorAll('a[href^="tel:"]').forEach(a=>{a.href='tel:+'+digits;a.textContent=settings.phone});document.querySelectorAll('a[href^="https://wa.me/"]').forEach(a=>a.href='https://wa.me/'+digits)}
+  if(settings.email)document.querySelectorAll('a[href^="mailto:"]').forEach(a=>{a.href='mailto:'+settings.email;a.textContent=settings.email});
+  if(settings.city){const contact=document.querySelector('.footer-grid>div:last-child p');if(contact)contact.textContent=settings.city}
+  Object.entries(cmsSectionSelectors).forEach(([key,selector])=>{const section=document.querySelector(selector);if(section)section.hidden=data.visibility?.[key]===false});
+  if(Array.isArray(data.activities)&&data.activities.length){const visual=document.querySelector('.visual-grid');visual.innerHTML=data.activities.map((item,index)=>`<article class="visual-card ${index===0?'visual-wide ':''}visible tilt"><img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.alt||item.title)}" loading="lazy" width="${index===0?1600:1000}" height="${index===0?1000:700}"><div><span>${escapeHTML(item.tag)}</span><h3>${escapeHTML(item.title)}</h3>${item.desc?`<p>${escapeHTML(item.desc)}</p>`:''}</div></article>`).join('')}
+  if(Array.isArray(data.articles)&&data.articles.length){const articles=document.querySelector('.articles');articles.innerHTML=data.articles.map(item=>`<article class="article visible"><span>${escapeHTML(item.tag)}</span><div class="article-art"><img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.alt||item.title)}" loading="lazy" width="1000" height="700"></div><h3>${escapeHTML(item.title)}</h3><p>${escapeHTML(item.desc)}</p><a href="${escapeHTML(item.link||'#')}">اقرأ المقال ←</a></article>`).join('')}
+  if(Array.isArray(data.services)){services=data.services.slice(0,100).map(normalizeService);renderServices(document.querySelector('.filters .active')?.dataset.filter||'all',document.getElementById('serviceSearch').value)}
+}
+fetch('/api/content',{headers:{accept:'application/json'}}).then(response=>response.ok?response.json():Promise.reject()).then(applyCMS).catch(()=>{});
