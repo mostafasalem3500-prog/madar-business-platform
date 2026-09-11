@@ -1,46 +1,47 @@
-const defaults=[{id:1,cat:'startup',icon:'▦',title:'تأسيس الشركات',desc:'من اختيار الكيان حتى إصدار السجل وتجهيز المنشأة للتشغيل.',color:'#e5f5ff'},{id:2,cat:'government',icon:'⌁',title:'الخدمات الحكومية',desc:'تنفيذ ومتابعة معاملات المنشأة عبر الجهات والمنصات ذات العلاقة.',color:'#e8f9f5'},{id:3,cat:'government',icon:'٪',title:'الزكاة والضريبة',desc:'خدمات التسجيل والإقرارات والمتابعة المحاسبية للمنشآت.',color:'#fff5dd'},{id:4,cat:'government',icon:'♙',title:'الموارد البشرية',desc:'خدمات قوى ومدد والتأمينات وتنظيم دورة حياة الموظف.',color:'#f0edff'},{id:5,cat:'consulting',icon:'◎',title:'دراسات الجدوى',desc:'دراسة السوق والجوانب الفنية والمالية قبل قرار الاستثمار.',color:'#e5f8f8'},{id:6,cat:'consulting',icon:'⌘',title:'الحوكمة والامتثال',desc:'أطر واضحة للصلاحيات والسياسات والمخاطر واستدامة القرار.',color:'#eaf0ff'},{id:7,cat:'growth',icon:'↗',title:'التخطيط ومؤشرات الأداء',desc:'تحويل الرؤية إلى أهداف ومبادرات ومؤشرات قابلة للقياس.',color:'#e7f8f1'},{id:8,cat:'growth',icon:'✓',title:'الجودة وشهادات ISO',desc:'تحليل الفجوات وبناء الأنظمة والتأهيل لمتطلبات الجودة.',color:'#eaf7ff'},{id:9,cat:'government',icon:'⌂',title:'التراخيص البلدية والسلامة',desc:'إصدار وتجديد التراخيص ومتابعة متطلبات السلامة.',color:'#fff2e8'},{id:10,cat:'growth',icon:'◈',title:'التحول الرقمي',desc:'أتمتة الإجراءات وربط البيانات وبناء لوحات قيادة للأعمال.',color:'#e9f5ff'},{id:11,cat:'startup',icon:'◇',title:'خدمات المستثمرين',desc:'مسار تأسيس منظم للمستثمر السعودي والخليجي والأجنبي.',color:'#eef9e9'},{id:12,cat:'government',icon:'®',title:'الملكية الفكرية',desc:'تسجيل العلامات التجارية ومتابعة الطلبات وحماية الأصول.',color:'#f7edff'}];
-function safeParse(key,fallback){try{return JSON.parse(localStorage.getItem(key)||'null')??fallback}catch{return fallback}}
-function cleanText(value,max=180){return String(value??'').replace(/[\u0000-\u001f\u007f]/g,'').trim().slice(0,max)}
-function escapeHTML(value){return cleanText(value,500).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-let services=safeParse('madar_services',defaults);
-if(!Array.isArray(services))services=[...defaults];
-services=services.slice(0,100);
-const titles={overview:'نظرة عامة',content:'الهوية والمحتوى',media:'الصور والحركة',services:'إدارة الخدمات',orders:'إدارة الطلبات',analytics:'التقارير والتحليلات'};
-document.querySelectorAll('aside nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('aside nav button,.admin-page').forEach(x=>x.classList.remove('active'));
-b.classList.add('active');
-document.getElementById(b.dataset.page).classList.add('active');
-document.getElementById('pageTitle').textContent=titles[b.dataset.page]});
-const settings=safeParse('madar_settings',{});
-brandInput.value=settings.brand||'مَدار';
-colorInput.value=settings.primary||'#1477c9';
-phoneInput.value=settings.phone||'+966 50 000 0000';
-heroTitleInput.value=settings.heroTitle||'كل ما تحتاجه منشأتك | في مسار واحد واضح.';
-heroSubtitleInput.value=settings.heroSubtitle||'نؤسس أعمالك، ننفّذ معاملاتك، ونطوّر منظومتك الإدارية بمتابعة شفافة من أول طلب حتى الإنجاز.';
-motionInput.value=settings.motion||'on';
-motionLevelInput.value=settings.motionLevel||'soft';
-settingsForm.onsubmit=e=>{e.preventDefault();
-Object.assign(settings,{brand:cleanText(brandInput.value,40),primary:/^#[0-9a-f]{6}$/i.test(colorInput.value)?colorInput.value:'#1477c9',phone:cleanText(phoneInput.value,24)});
-localStorage.setItem('madar_settings',JSON.stringify(settings));
-toast('تم حفظ إعدادات الهوية')};
-mediaForm.onsubmit=e=>{e.preventDefault();
-Object.assign(settings,{heroTitle:cleanText(heroTitleInput.value,140),heroSubtitle:cleanText(heroSubtitleInput.value,300),motion:motionInput.value==='off'?'off':'on',motionLevel:motionLevelInput.value==='rich'?'rich':'soft'});
-localStorage.setItem('madar_settings',JSON.stringify(settings));
-toast('تم حفظ إعدادات الصور والحركة')};
-function render(){serviceCount.textContent=services.length;
-serviceAdminList.innerHTML=services.map(s=>`<article class="service-item"><i>${escapeHTML(s.icon||'✦')}</i><div><b>${escapeHTML(s.title||'خدمة أعمال')}</b><small>${escapeHTML(s.cat||'consulting')}</small></div><button data-delete="${Number(s.id)||0}" title="حذف">×</button></article>`).join('')}render();
-serviceAdminList.onclick=e=>{const b=e.target.closest('[data-delete]');
-if(!b)return;
-services=services.filter(s=>s.id!==+b.dataset.delete);
-localStorage.setItem('madar_services',JSON.stringify(services));
-render();
-toast('تم حذف الخدمة من هذه النسخة')};
-addService.onclick=()=>{const title=prompt('اسم الخدمة الجديدة');
-if(!cleanText(title,80))return;
-const desc=cleanText(prompt('وصف مختصر للخدمة')||'خدمة أعمال متخصصة قابلة للتخصيص حسب احتياج المنشأة.',220);
-services.push({id:Date.now(),cat:'consulting',icon:'✦',title:cleanText(title,80),desc,color:'#e8f5fd'});
-localStorage.setItem('madar_services',JSON.stringify(services));
-render();
-toast('تمت إضافة الخدمة')};
-function toast(m){adminToast.textContent=m;
-adminToast.classList.add('show');
-setTimeout(()=>adminToast.classList.remove('show'),2300)}
+const $=selector=>document.querySelector(selector);
+const clean=(value,max=300)=>String(value??'').replace(/[\u0000-\u001f\u007f]/g,'').trim().slice(0,max);
+const esc=value=>clean(value,600).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+let content=null;
+const sectionNames={visualStory:'الصور والأنشطة الرئيسية',marquee:'شريط القطاعات المتحرك',saudiValue:'القيمة للسوق السعودي',method:'منهجية العمل والإنفوجرافيك',services:'مستكشف الخدمات',journey:'رحلة تنفيذ الخدمة',transformation:'المقارنة قبل وبعد',solutions:'حلول مراحل المنشأة',packages:'الباقات',track:'تتبع الطلبات',knowledge:'مركز المعرفة',deliverables:'المخرجات والتسليمات',faq:'الأسئلة الشائعة',cta:'الدعوة الختامية للتواصل'};
+const titles={overview:'نظرة عامة',content:'الهوية والمحتوى',media:'الصور والأنشطة',articles:'مركز المعرفة',services:'إدارة الخدمات',sections:'عرض الأقسام'};
+
+async function api(url,options={}){const response=await fetch(url,{credentials:'same-origin',...options,headers:{'content-type':'application/json','x-requested-with':'MadarAdmin',...(options.headers||{})}});const data=await response.json().catch(()=>({error:'استجابة غير صالحة'}));if(!response.ok)throw new Error(data.error||'تعذر إكمال العملية');return data}
+function toast(message,type='ok'){$('#adminToast').textContent=message;$('#adminToast').className=`toast show ${type}`;clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>$('#adminToast').className='toast',2600)}
+function setBusy(busy,label='جارٍ الحفظ…'){$('#saveState').textContent=busy?label:'تم الحفظ';document.body.classList.toggle('saving',busy)}
+
+document.querySelectorAll('aside nav button').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('aside nav button,.admin-page').forEach(x=>x.classList.remove('active'));button.classList.add('active');$('#'+button.dataset.page).classList.add('active');$('#pageTitle').textContent=titles[button.dataset.page]}));
+
+async function start(){try{const session=await api('/api/admin/session',{method:'GET'});if(session.authenticated){$('#loginGate').classList.add('hidden');await loadContent()}else{$('#loginGate').classList.remove('hidden');if(!session.configured)$('#loginError').textContent='يلزم ضبط ADMIN_PASSWORD في إعدادات الخادم أولًا.'}}catch{$('#loginError').textContent='تعذر الاتصال بالخادم، حاول تحديث الصفحة.'}}
+$('#loginForm').addEventListener('submit',async event=>{event.preventDefault();$('#loginError').textContent='';const button=event.submitter;button.disabled=true;button.textContent='جارٍ التحقق…';try{await api('/api/admin/login',{method:'POST',body:JSON.stringify({password:$('#passwordInput').value})});$('#passwordInput').value='';$('#loginGate').classList.add('hidden');await loadContent();toast('تم تسجيل الدخول بنجاح')}catch(error){$('#loginError').textContent=error.message}finally{button.disabled=false;button.textContent='دخول آمن'}});
+$('#logoutBtn').addEventListener('click',async()=>{try{await api('/api/admin/logout',{method:'POST'})}finally{location.reload()}});
+
+async function loadContent(){content=await api('/api/content',{method:'GET'});fillSettings();renderAll()}
+function fillSettings(){const s=content.settings;$('#brandInput').value=s.brand;$('#colorInput').value=s.primary;$('#phoneInput').value=s.phone;$('#emailInput').value=s.email;$('#cityInput').value=s.city;$('#heroTitleInput').value=s.heroTitle;$('#heroSubtitleInput').value=s.heroSubtitle;$('#motionInput').value=s.motion;$('#motionLevelInput').value=s.motionLevel}
+function renderAll(){renderActivities();renderArticles();renderServices();renderVisibility();updateCounts()}
+function updateCounts(){$('#serviceCount').textContent=content.services.length;$('#activityCount').textContent=content.activities.length;$('#articleCount').textContent=content.articles.length;$('#sectionCount').textContent=Object.values(content.visibility).filter(Boolean).length}
+async function save(message){setBusy(true);try{content=await api('/api/admin/content',{method:'PUT',body:JSON.stringify(content)});renderAll();toast(message)}catch(error){toast(error.message,'error');if(/تسجيل الدخول/.test(error.message))location.reload()}finally{setBusy(false)}}
+
+$('#settingsForm').addEventListener('submit',event=>{event.preventDefault();content.settings={brand:clean($('#brandInput').value,40),primary:$('#colorInput').value,phone:clean($('#phoneInput').value,24),email:clean($('#emailInput').value,100),city:clean($('#cityInput').value,100),heroTitle:clean($('#heroTitleInput').value,140),heroSubtitle:clean($('#heroSubtitleInput').value,300),motion:$('#motionInput').value,motionLevel:$('#motionLevelInput').value};save('تم نشر إعدادات الهوية')});
+
+function imageEditor(item,index,type){return `<article class="editor-card" data-index="${index}" data-type="${type}"><div class="editor-image"><img src="${esc(item.image)}" alt=""><label class="upload-btn">رفع صورة<input type="file" accept="image/jpeg,image/png,image/webp" data-upload></label><small>JPG أو PNG أو WebP — حتى 2MB</small></div><div class="editor-fields"><label>التصنيف<input data-field="tag" value="${esc(item.tag)}" maxlength="40"></label><label class="wide">العنوان<input data-field="title" value="${esc(item.title)}" maxlength="120"></label><label class="wide">الوصف<textarea data-field="desc" maxlength="260">${esc(item.desc)}</textarea></label><label class="wide">وصف الصورة لمحركات البحث<input data-field="alt" value="${esc(item.alt)}" maxlength="160"></label>${type==='article'?`<label class="wide">رابط المقال<input data-field="link" value="${esc(item.link||'#')}" maxlength="500" dir="ltr"></label>`:''}</div><button class="delete-editor" data-remove title="حذف">×</button></article>`}
+function renderActivities(){$('#activityEditor').innerHTML=content.activities.map((x,i)=>imageEditor(x,i,'activity')).join('')||'<div class="empty">لا توجد أنشطة. أضف أول نشاط للبدء.</div>'}
+function renderArticles(){$('#articleEditor').innerHTML=content.articles.map((x,i)=>imageEditor(x,i,'article')).join('')||'<div class="empty">لا توجد مقالات منشورة.</div>'}
+function collectEditors(type){const key=type==='activity'?'activities':'articles';document.querySelectorAll(`[data-type="${type}"]`).forEach(card=>{const item=content[key][+card.dataset.index];card.querySelectorAll('[data-field]').forEach(input=>item[input.dataset.field]=clean(input.value,input.dataset.field==='desc'?260:input.dataset.field==='link'?500:160))})}
+function bindEditor(container,type){container.addEventListener('change',async event=>{const input=event.target.closest('[data-upload]');if(!input)return;const file=input.files[0];if(!file)return;if(file.size>2_000_000)return toast('الصورة أكبر من 2MB','error');const card=input.closest('.editor-card'),button=card.querySelector('.upload-btn');button.classList.add('loading');button.childNodes[0].textContent='جارٍ الرفع…';try{const data=await fileToData(file),result=await api('/api/admin/upload',{method:'POST',body:JSON.stringify({data,name:file.name})});const key=type==='activity'?'activities':'articles';content[key][+card.dataset.index].image=result.url;card.querySelector('img').src=result.url;toast('تم رفع الصورة، اضغط حفظ للنشر')}catch(error){toast(error.message,'error')}finally{button.classList.remove('loading');button.childNodes[0].textContent='رفع صورة'}});container.addEventListener('click',event=>{const remove=event.target.closest('[data-remove]');if(!remove)return;collectEditors(type);const card=remove.closest('.editor-card'),key=type==='activity'?'activities':'articles';content[key].splice(+card.dataset.index,1);type==='activity'?renderActivities():renderArticles();updateCounts()})}
+bindEditor($('#activityEditor'),'activity');bindEditor($('#articleEditor'),'article');
+function fileToData(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(file)})}
+$('#addActivity').addEventListener('click',()=>{collectEditors('activity');if(content.activities.length>=6)return toast('الحد الأقصى 6 أنشطة','error');content.activities.push({id:Date.now(),tag:'نشاط جديد',title:'عنوان النشاط',desc:'وصف مختصر للنشاط.',image:'assets/images/saudi-business-establishment.svg',alt:'صورة نشاط أعمال'});renderActivities();updateCounts()});
+$('#addArticle').addEventListener('click',()=>{collectEditors('article');if(content.articles.length>=9)return toast('الحد الأقصى 9 مقالات','error');content.articles.push({id:Date.now(),tag:'مقال',title:'عنوان المقال الجديد',desc:'نبذة مختصرة عن محتوى المقال.',image:'assets/images/company-formation.svg',alt:'صورة المقال',link:'#'});renderArticles();updateCounts()});
+$('#saveActivities').addEventListener('click',()=>{collectEditors('activity');save('تم نشر الصور والأنشطة')});
+$('#saveArticles').addEventListener('click',()=>{collectEditors('article');save('تم نشر مركز المعرفة')});
+
+function renderServices(){$('#serviceAdminList').innerHTML=content.services.map((s,i)=>`<article class="service-item" data-service-index="${i}"><i style="background:${esc(s.color)}">${esc(s.icon)}</i><div><input data-sfield="title" value="${esc(s.title)}" maxlength="80"><textarea data-sfield="desc" maxlength="220">${esc(s.desc)}</textarea><span><select data-sfield="cat"><option value="startup" ${s.cat==='startup'?'selected':''}>التأسيس</option><option value="government" ${s.cat==='government'?'selected':''}>حكومية</option><option value="consulting" ${s.cat==='consulting'?'selected':''}>استشارات</option><option value="growth" ${s.cat==='growth'?'selected':''}>النمو والجودة</option></select><input class="icon-input" data-sfield="icon" value="${esc(s.icon)}" maxlength="3" title="الرمز"><input type="color" data-sfield="color" value="${esc(s.color)}" title="لون البطاقة"></span></div><button data-delete-service title="حذف">×</button></article>`).join('')||'<div class="empty">لا توجد خدمات حاليًا.</div>'}
+$('#serviceAdminList').addEventListener('click',event=>{const button=event.target.closest('[data-delete-service]');if(!button)return;collectServices();content.services.splice(+button.closest('[data-service-index]').dataset.serviceIndex,1);renderServices();updateCounts()});
+function collectServices(){document.querySelectorAll('[data-service-index]').forEach(card=>{const item=content.services[+card.dataset.serviceIndex];card.querySelectorAll('[data-sfield]').forEach(input=>item[input.dataset.sfield]=clean(input.value,input.dataset.sfield==='desc'?220:80))})}
+$('#addService').addEventListener('click',()=>{collectServices();content.services.push({id:Date.now(),cat:'consulting',icon:'✦',title:'خدمة جديدة',desc:'اكتب وصف الخدمة هنا.',color:'#e8f5fd'});renderServices();updateCounts()});
+$('#saveServices').addEventListener('click',()=>{collectServices();save('تم نشر قائمة الخدمات')});
+
+function renderVisibility(){$('#visibilityList').innerHTML=Object.entries(sectionNames).map(([key,label])=>`<label><span><b>${label}</b><small>${content.visibility[key]!==false?'ظاهر للزوار':'مخفي حاليًا'}</small></span><input type="checkbox" data-visibility="${key}" ${content.visibility[key]!==false?'checked':''}><i></i></label>`).join('')}
+$('#saveVisibility').addEventListener('click',()=>{document.querySelectorAll('[data-visibility]').forEach(input=>content.visibility[input.dataset.visibility]=input.checked);save('تم تحديث الأقسام الظاهرة')});
+
+start();
