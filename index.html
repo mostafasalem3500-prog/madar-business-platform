@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="madar-style-01.css?v=3">
   <link rel="stylesheet" href="madar-style-02.css?v=4">
   <link rel="stylesheet" href="madar-style-03.css?v=4">
+  <link rel="stylesheet" href="eservices.css?v=1">
 </head>
 <body>
   <div class="scroll-progress" aria-hidden="true"><i id="scrollProgress"></i></div>
@@ -25,7 +26,7 @@
       <a class="brand" href="#home" aria-label="مدار الأعمال، الرئيسية"><span class="brand-mark"><i></i><i></i><i></i></span><span><b>مَدار</b><small>الأعمال</small></span></a>
       <button class="menu-btn" aria-label="فتح القائمة" aria-expanded="false"><span></span><span></span><span></span></button>
       <nav aria-label="التنقل الرئيسي">
-        <a class="active" href="#home">الرئيسية</a><a href="#services">الخدمات</a><a href="#solutions">الحلول</a><a href="#packages">الباقات</a><a href="#journey">كيف نعمل</a><a href="#knowledge">المعرفة</a><a href="#about">من نحن</a>
+        <a class="active" href="#home">الرئيسية</a><a href="#services">الخدمات</a><a href="#solutions">الحلول</a><a href="#packages">الباقات</a><a href="#eservices">الخدمات الحكومية</a><a href="#journey">كيف نعمل</a><a href="#knowledge">المعرفة</a><a href="#about">من نحن</a>
       </nav>
       <div class="nav-actions"><a class="icon-btn admin-link" href="admin.html" aria-label="لوحة التحكم" title="لوحة التحكم">⚙</a><button class="icon-btn" id="searchToggle" aria-label="بحث">⌕</button><button class="btn btn-primary open-wizard">ابدأ طلبك <span>←</span></button></div>
     </div>
@@ -112,7 +113,38 @@
         <article class="package reveal"><span class="package-label">للبدايات والاستثمار</span><h3>التأسيس والمستثمرون</h3><p>مسارات للمنشأة الجديدة والمستثمر الخليجي أو الأجنبي.</p><div class="price">3 باقات</div><ul><li>باقة تأسيس للمنشآت الصغيرة</li><li>مسار المستثمر الخليجي</li><li>مسار المستثمر الأجنبي</li><li>متابعة المنصات المرتبطة</li></ul><a class="btn btn-outline" href="#services">استعرض الباقات</a></article>
         <article class="package featured reveal delay-1"><span class="ribbon">حسب حجم الفريق</span><span class="package-label">للمنشآت القائمة</span><h3>اشتراكات المنشآت</h3><p>مستويات متدرجة لإدارة المنصات الحكومية.</p><div class="price">5 مستويات</div><ul><li>من البرونزية إلى البلاتينية</li><li>نطاق واضح لكل باقة</li><li>اختيار حسب عدد الموظفين</li><li>تفاصيل المنصات قبل الطلب</li></ul><a class="btn btn-primary" href="#services">قارن المستويات</a></article>
         <article class="package reveal delay-2"><span class="package-label">لحالة محددة</span><h3>الاستشارة الخاصة</h3><p>جلسة مركزة لفهم الحالة الحكومية وتحديد الخطوة التالية.</p><div class="price">199 ر.س</div><ul><li>تشخيص الاحتياج</li><li>تحديد الجهة أو المنصة</li><li>مراجعة المتطلبات</li><li>توضيح مسار التنفيذ</li></ul><a class="btn btn-outline" href="#services">عرض الاستشارة</a></article>
-      </div></div>
+      </div>
+      <a class="es-teaser reveal" href="#eservices"><i aria-hidden="true">✦</i><span><b>تحتاج خدمة واحدة فقط؟</b><small>تصفّح الخدمات الحكومية المنفردة لكل وزارة ومنصة، واطلبها بلا اشتراك.</small></span><em>تصفّح الخدمات ↓</em></a></div>
+    </section>
+
+    <section class="eservices section" id="eservices" aria-labelledby="esTitle">
+      <div class="container">
+        <div class="section-head centered reveal">
+          <div class="eyebrow"><span></span> الخدمات الحكومية المنفردة</div>
+          <h2 id="esTitle">معاملة واحدة؟ اطلبها منفردة<br><em>دون اشتراك في باقة.</em></h2>
+          <p>اختر الجهة ثم الخدمة، أضف ما تحتاجه إلى طلبك، ويتولى معقّب مختص التنفيذ والمتابعة حتى الإنجاز.</p>
+        </div>
+        <div class="es-stats reveal">
+          <article><b id="esTotal">—</b><span>خدمة جاهزة للطلب</span></article>
+          <article><b id="esEntityCount">—</b><span>جهة ومنصة حكومية</span></article>
+          <article><b><small>من</small> <span id="esFrom">—</span> <small>ر.س</small></b><span>أتعاب الخدمة</span></article>
+          <article><b>بلا</b><span>اشتراك أو التزام شهري</span></article>
+        </div>
+        <div class="es-shell reveal">
+          <div class="es-search">
+            <span aria-hidden="true">⌕</span>
+            <input id="esSearch" type="search" placeholder="ابحث: خروج وعودة، سجل تجاري، رخصة بلدي، شهادة زكاة…" aria-label="البحث في الخدمات الحكومية المنفردة" autocomplete="off">
+          </div>
+          <div class="es-layout">
+            <div class="es-entities" id="esEntities" role="tablist" aria-label="الجهات الحكومية"></div>
+            <div class="es-panel">
+              <div class="es-head" id="esHead"></div>
+              <div class="es-list" id="esList" aria-live="polite"></div>
+            </div>
+          </div>
+          <p class="es-note">الأسعار أتعاب تنفيذ تبدأ من القيمة المعروضة ولا تشمل الرسوم الحكومية التي تُسدَّد للجهة المختصة. الخدمات المعلَّمة «حسب الطلب» يُرسل لها عرض سعر بعد مراجعة الحالة.</p>
+        </div>
+      </div>
     </section>
 
     <section class="dashboard-showcase section" id="track">
@@ -128,7 +160,7 @@
     <section class="cta section" id="about"><div class="container cta-inner reveal"><div><span>لست متأكدًا من نقطة البداية؟</span><h2>صف لنا احتياجك،<br>وسنرسم لك المسار.</h2><p>جلسة أولية لفهم وضع منشأتك وتحديد الخطوة الأنسب.</p></div><div><button class="btn btn-white btn-lg open-wizard">احجز استشارة مجانية <span>←</span></button><a class="btn btn-glass btn-lg" href="https://wa.me/966500000000">تحدث عبر واتساب</a></div></div></section>
   </main>
 
-  <footer><div class="container footer-grid"><div><a class="brand footer-brand" href="#home"><span class="brand-mark"><i></i><i></i><i></i></span><span><b>مَدار</b><small>الأعمال</small></span></a><p>منصة سعودية لخدمات التأسيس والتشغيل والتطوير المؤسسي، تجمع احتياج منشأتك في مسار واضح.</p><div class="social"><a href="#">in</a><a href="#">𝕏</a><a href="#">◎</a></div></div><div><h4>الخدمات</h4><a href="#services">تأسيس الشركات</a><a href="#services">الخدمات الحكومية</a><a href="#services">الاستشارات</a><a href="#services">دراسات الجدوى</a></div><div><h4>المنصة</h4><a href="#track">تتبّع الطلب</a><a href="#packages">الباقات</a><a href="#knowledge">مركز المعرفة</a><a href="#about">من نحن</a></div><div><h4>تواصل معنا</h4><p>الرياض، المملكة العربية السعودية</p><a href="tel:+966500000000">+966 50 000 0000</a><a href="mailto:hello@madar.sa">hello@madar.sa</a></div></div><div class="container footer-bottom"><span>© 2026 مدار الأعمال. جميع الحقوق محفوظة.</span><span>سياسة الخصوصية · الشروط والأحكام</span></div><div class="disclaimer container">أسماء الجهات الحكومية المذكورة لتوضيح نطاق الخدمات ولا تعني وجود شراكة أو تمثيل رسمي.</div></footer>
+  <footer><div class="container footer-grid"><div><a class="brand footer-brand" href="#home"><span class="brand-mark"><i></i><i></i><i></i></span><span><b>مَدار</b><small>الأعمال</small></span></a><p>منصة سعودية لخدمات التأسيس والتشغيل والتطوير المؤسسي، تجمع احتياج منشأتك في مسار واضح.</p><div class="social"><a href="#">in</a><a href="#">𝕏</a><a href="#">◎</a></div></div><div><h4>الخدمات</h4><a href="#services">تأسيس الشركات</a><a href="#services">الخدمات الحكومية</a><a href="#services">الاستشارات</a><a href="#services">دراسات الجدوى</a></div><div><h4>المنصة</h4><a href="#track">تتبّع الطلب</a><a href="#packages">الباقات</a><a href="#eservices">الخدمات الحكومية</a><a href="#knowledge">مركز المعرفة</a><a href="#about">من نحن</a></div><div><h4>تواصل معنا</h4><p>الرياض، المملكة العربية السعودية</p><a href="tel:+966500000000">+966 50 000 0000</a><a href="mailto:hello@madar.sa">hello@madar.sa</a></div></div><div class="container footer-bottom"><span>© 2026 مدار الأعمال. جميع الحقوق محفوظة.</span><span>سياسة الخصوصية · الشروط والأحكام</span></div><div class="disclaimer container">أسماء الجهات الحكومية المذكورة لتوضيح نطاق الخدمات ولا تعني وجود شراكة أو تمثيل رسمي.</div></footer>
 
   <div class="modal" id="wizardModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="wizardTitle"><div class="modal-backdrop"></div><div class="modal-card"><button class="modal-close" aria-label="إغلاق">×</button><div class="wizard-top"><div><span>طلب خدمة جديد</span><h2 id="wizardTitle">لنبدأ من احتياجك</h2></div><b id="stepCount">1 / 4</b></div><div class="wizard-progress"><i id="wizardProgress"></i></div><form id="requestForm"><section class="wizard-step active" data-step="1"><h3>من نخدم اليوم؟</h3><p>اختر الصفة الأقرب لك.</p><div class="choice-grid"><label><input type="radio" name="customer" value="فرد" required><span>♙<b>فرد</b><small>خدمة أو معاملة شخصية</small></span></label><label><input type="radio" name="customer" value="منشأة"><span>▦<b>منشأة قائمة</b><small>تشغيل أو تطوير أعمال</small></span></label><label><input type="radio" name="customer" value="مستثمر"><span>◎<b>مستثمر</b><small>تأسيس أو توسع في السعودية</small></span></label></div></section><section class="wizard-step" data-step="2"><h3>ما نوع احتياجك؟</h3><p>يمكننا تعديل الاختيار بعد المراجعة.</p><select name="service" required><option value="">اختر المسار</option><option>تأسيس شركة أو منشأة</option><option>خدمة حكومية إلكترونية</option><option>دراسة جدوى</option><option>حوكمة وتطوير مؤسسي</option><option>موارد بشرية</option><option>جودة وشهادات ISO</option><option>لست متأكدًا</option></select><textarea name="need" placeholder="صف احتياجك باختصار…"></textarea></section><section class="wizard-step" data-step="3"><h3>كيف نتواصل معك؟</h3><p>سنستخدم البيانات للرد على طلبك فقط.</p><div class="form-grid"><label>الاسم الكامل<input name="name" required placeholder="الاسم"></label><label>رقم الجوال<input name="phone" required dir="ltr" placeholder="05xxxxxxxx"></label><label class="full">البريد الإلكتروني<input name="email" type="email" dir="ltr" placeholder="name@example.com"></label></div></section><section class="wizard-step success" data-step="4"><span class="success-icon">✓</span><h3>وصل طلبك بنجاح</h3><p>رقم الطلب التجريبي <b id="generatedId">MD-0000</b></p><small>هذه نسخة عرض؛ لم تُرسل بيانات إلى خادم خارجي.</small></section><div class="wizard-actions"><button type="button" class="btn btn-ghost" id="prevStep" hidden>السابق</button><button type="button" class="btn btn-primary" id="nextStep">التالي <span>←</span></button></div></form></div></div>
 
@@ -137,6 +169,15 @@
   <div class="toast" id="toast"></div>
   <a class="whatsapp-float" href="https://wa.me/966500000000" aria-label="تواصل عبر واتساب"><span>◔</span><b>تحدث معنا</b></a><button class="back-top" id="backTop" aria-label="العودة إلى أعلى">↑</button>
   <script src="site-config.js"></script>
-  <script src="app.js?v=6"></script>
+  
+  <div class="es-cart" id="esCart" aria-hidden="true" role="region" aria-label="الخدمات المختارة">
+    <div class="es-cart-bar">
+      <button type="button" id="esToggle" class="es-cart-info"><b id="esCartCount">0</b><span>خدمة مختارة<small>التقدير: <em id="esCartSum">—</em> · غير شامل الرسوم الحكومية</small></span></button>
+      <button type="button" id="esClear" class="es-clear">مسح</button>
+      <button type="button" id="esOrder" class="btn btn-primary">أكمل الطلب <span>←</span></button>
+    </div>
+    <div class="es-cart-list" id="esCartList"></div>
+  </div>
+<script src="app.js?v=7"></script><script src="eservices.js?v=1"></script>
 </body>
 </html>
