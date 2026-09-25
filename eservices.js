@@ -65,7 +65,7 @@
 
   function order(items){
     if(typeof window.openWizard!=='function')return;
-    window.openWizard('خدمة حكومية منفردة');
+    window.openWizard('خدمة حكومية منفردة',{source:'eservices',items:items.map(s=>{const e=entities.find(x=>x.key===s.entity);return `${s.title} — ${e?.name||''}${s.price?' ('+s.price+')':''}`})});
     const form=document.getElementById('requestForm');if(!form)return;
     const select=form.elements.service;if(select&&![...select.options].some(o=>o.value==='خدمة حكومية منفردة'))select.add(new Option('خدمة حكومية منفردة','خدمة حكومية منفردة'),1);if(select)select.value='خدمة حكومية منفردة';
     if(form.elements.need)form.elements.need.value=items.length?'الخدمات المطلوبة:\n'+items.map(s=>{const e=entities.find(x=>x.key===s.entity);return `• ${s.title} — ${e?.name||''}`}).join('\n'):'';
@@ -80,5 +80,6 @@
     renderStats();render();return true;
   }
   document.addEventListener('madar:content',e=>load(e.detail));
+  document.addEventListener('madar:order-sent',()=>{if(picked.size){picked.clear();render()}});
   if(!load(window.MADAR_CONTENT))fetch('data/catalog.json',{headers:{accept:'application/json'}}).then(r=>r.ok?r.json():null).then(d=>{if(!services.length)load(d)}).catch(()=>{});
 })();

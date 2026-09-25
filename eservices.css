@@ -99,3 +99,16 @@
 @media(prefers-reduced-motion:reduce){.es-item,.es-head{animation:none}.es-cart{transition:none}}
 body.motion-off .es-item,body.motion-off .es-head{animation:none}
 [hidden]{display:none!important}
+
+/* شريط الإعلان والتتبع الحقيقي */
+.announce{background:linear-gradient(90deg,var(--blue),var(--cyan));color:#fff;font-size:14px;font-weight:700;text-align:center}
+.announce .container{display:flex;gap:14px;align-items:center;justify-content:center;min-height:40px;padding:6px 0;flex-wrap:wrap}
+.announce a{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.track-search{gap:6px;flex-wrap:wrap}
+.track-search input{min-width:0}
+.track-search #trackInput{flex:1.4 1 150px}
+.track-search #trackPhone{flex:1 1 110px;border-inline-start:1px solid #dce9ef!important}
+.track-search button:disabled{opacity:.6}
+.track-result ol li small{color:var(--muted);font-size:11px;margin-inline-start:6px}
+.track-result .track-note{margin:12px 0 0;padding:10px 12px;border-radius:10px;background:#f1f9ff;font-size:13px;color:var(--deep);opacity:1}
+.in-preview .es-cart{display:none}
