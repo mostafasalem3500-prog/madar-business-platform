@@ -68,6 +68,28 @@ function readContent() {
   return merged;
 }
 
+
+// تعديلات أسعار تُطبَّق مرة واحدة على البيانات المحفوظة دون المساس بباقي التعديلات.
+const pricePatches = [
+  {id: 'p2026-11-individuals-insurance', apply: g => g.map(x => {
+    if (x.entity === 'individuals') return {...x, price: '99 ر.س'};
+    const m = {'مقارنة عروض التأمين بين الشركات': '120 ر.س', 'إضافة موظفين على الوثيقة': '99 ر.س', 'حذف موظفين من الوثيقة': '99 ر.س', 'إرسال شبكة مزودي الخدمة ونسبة التغطية': '89 ر.س', 'التأمين الطبي للعامل': '99 ر.س'};
+    return x.entity === 'insurance' && m[x.title] ? {...x, price: m[x.title]} : x;
+  })}
+];
+function applyPricePatches() {
+  const saved = readFile(contentFile, null);
+  if (!saved || !Array.isArray(saved.govServices)) return;
+  const done = new Set(Array.isArray(saved.appliedPatches) ? saved.appliedPatches : []);
+  const todo = pricePatches.filter(p => !done.has(p.id));
+  if (!todo.length) return;
+  todo.forEach(p => { saved.govServices = p.apply(saved.govServices); done.add(p.id); });
+  saved.appliedPatches = [...done];
+  atomicWrite(contentFile, saved);
+  console.log('Applied price patches:', todo.map(p => p.id).join(', '));
+}
+applyPricePatches();
+
 function readJson(req, limit = 3_000_000) {
   return new Promise((resolve, reject) => {
     let size = 0, data = '';
@@ -107,7 +129,8 @@ function normalizeContent(input) {
     activities: (Array.isArray(input?.activities) ? input.activities : current.activities).slice(0, 8).map((x, i) => item(x, i, 'activity')),
     articles: (Array.isArray(input?.articles) ? input.articles : current.articles).slice(0, 12).map((x, i) => item(x, i, 'article')),
     services: (Array.isArray(input?.services) ? input.services : current.services).slice(0, 100).map(service),
-    entities, govServices
+    entities, govServices,
+    appliedPatches: Array.isArray(current.appliedPatches) ? current.appliedPatches : pricePatches.map(p => p.id)
   };
 }
 
