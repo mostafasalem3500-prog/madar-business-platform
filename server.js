@@ -77,6 +77,26 @@ const pricePatches = [
     return x.entity === 'insurance' && m[x.title] ? {...x, price: m[x.title]} : x;
   })}
 ];
+// تعديل ثانٍ: أسعار جهات كاملة، أسعار خدمات محددة، حذف وإضافة خدمات (data/patch-2.json).
+const patch2 = JSON.parse(fs.readFileSync(path.join(root, 'data', 'patch-2.json'), 'utf8'));
+pricePatches.push({id: 'p2026-11-25-batch2', apply: g => {
+  const out = [];
+  for (const x of g) {
+    if ((patch2.remove[x.entity] || []).includes(x.title)) continue;
+    let price = x.price;
+    if (patch2.entityPrice[x.entity] !== undefined) price = patch2.entityPrice[x.entity];
+    const tp = patch2.titlePrice[x.entity] || {};
+    if (tp[x.title] !== undefined) price = tp[x.title];
+    out.push({...x, price});
+  }
+  Object.entries(patch2.add).forEach(([entity, titles], n) => {
+    const have = new Set(out.filter(x => x.entity === entity).map(x => x.title));
+    let last = -1; out.forEach((x, i) => { if (x.entity === entity) last = i; });
+    const fresh = titles.filter(t => !have.has(t)).map((title, k) => ({id: 900000 + n * 1000 + k, entity, title, price: ''}));
+    if (last < 0) out.push(...fresh); else out.splice(last + 1, 0, ...fresh);
+  });
+  return out;
+}});
 function applyPricePatches() {
   const saved = readFile(contentFile, null);
   if (!saved || !Array.isArray(saved.govServices)) return;

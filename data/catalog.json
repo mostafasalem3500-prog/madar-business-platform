@@ -1317,43 +1317,43 @@
    "id": 1196,
    "entity": "chamber",
    "title": "تفعيل الاشتراك",
-   "price": "250 ر.س"
+   "price": "100 ر.س"
   },
   {
    "id": 1197,
    "entity": "chamber",
    "title": "تجديد الاشتراك",
-   "price": "300 ر.س"
+   "price": "100 ر.س"
   },
   {
    "id": 1198,
    "entity": "chamber",
    "title": "تحديث بيانات المنشأة",
-   "price": "150 ر.س"
+   "price": "100 ر.س"
   },
   {
    "id": 1199,
    "entity": "chamber",
    "title": "تصديق تفويض مراجعة",
-   "price": "200 ر.س"
+   "price": "100 ر.س"
   },
   {
    "id": 1200,
    "entity": "chamber",
    "title": "تصديق عقد عمل",
-   "price": "185 ر.س"
+   "price": "100 ر.س"
   },
   {
    "id": 1201,
    "entity": "chamber",
    "title": "تصديق طلبات الزيارة",
-   "price": "1,200 ر.س"
+   "price": "100 ر.س"
   },
   {
    "id": 1202,
    "entity": "chamber",
    "title": "تفويض تأشيرة عمل مهنية",
-   "price": "375 ر.س"
+   "price": "100 ر.س"
   },
   {
    "id": 1203,
@@ -1365,55 +1365,55 @@
    "id": 1204,
    "entity": "chamber",
    "title": "إصدار شهادة منشأ",
-   "price": ""
+   "price": "100 ر.س"
   },
   {
    "id": 1205,
    "entity": "media",
    "title": "إصدار ترخيص إعلامي",
-   "price": "199 ر.س"
+   "price": "300 ر.س"
   },
   {
    "id": 1206,
    "entity": "media",
    "title": "تجديد الرخصة الإعلامية",
-   "price": "99 ر.س"
+   "price": "300 ر.س"
   },
   {
    "id": 1207,
    "entity": "media",
    "title": "تحديث بيانات الرخصة",
-   "price": "99 ر.س"
+   "price": "300 ر.س"
   },
   {
    "id": 1208,
    "entity": "media",
    "title": "تحديث اسم الرخصة",
-   "price": "99 ر.س"
+   "price": "300 ر.س"
   },
   {
    "id": 1209,
    "entity": "media",
    "title": "نقل ملكية الرخصة",
-   "price": "99 ر.س"
+   "price": "300 ر.س"
   },
   {
    "id": 1210,
    "entity": "media",
    "title": "شطب الرخصة",
-   "price": "99 ر.س"
+   "price": "300 ر.س"
   },
   {
    "id": 1211,
    "entity": "media",
    "title": "إصدار فسح إعلامي",
-   "price": "99 ر.س"
+   "price": "300 ر.س"
   },
   {
    "id": 1212,
    "entity": "media",
    "title": "ترخيص موثوق للمعلنين",
-   "price": ""
+   "price": "500 ر.س"
   },
   {
    "id": 1213,
@@ -1500,46 +1500,136 @@
    "price": ""
   },
   {
-   "id": 1227,
+   "id": 5000,
    "entity": "justice",
-   "title": "توثيق عقد الإيجار (إيجار)",
+   "title": "طلب صلح عبر منصة تراضي",
+   "price": ""
+  },
+  {
+   "id": 5001,
+   "entity": "justice",
+   "title": "صلح عمالي (ودّي) عبر تراضي",
+   "price": ""
+  },
+  {
+   "id": 5002,
+   "entity": "justice",
+   "title": "صلح تجاري عبر تراضي",
+   "price": ""
+  },
+  {
+   "id": 5003,
+   "entity": "justice",
+   "title": "صلح أسري وأحوال شخصية عبر تراضي",
+   "price": ""
+  },
+  {
+   "id": 5004,
+   "entity": "justice",
+   "title": "توثيق اتفاقية صلح كسند تنفيذي",
+   "price": ""
+  },
+  {
+   "id": 5005,
+   "entity": "justice",
+   "title": "حضور جلسة صلح افتراضية",
+   "price": ""
+  },
+  {
+   "id": 5006,
+   "entity": "justice",
+   "title": "تقديم طلب تنفيذ (سند تنفيذي)",
+   "price": ""
+  },
+  {
+   "id": 5007,
+   "entity": "justice",
+   "title": "تنفيذ شيك أو كمبيالة أو سند لأمر",
+   "price": ""
+  },
+  {
+   "id": 5008,
+   "entity": "justice",
+   "title": "تنفيذ حكم قضائي",
+   "price": ""
+  },
+  {
+   "id": 5009,
+   "entity": "justice",
+   "title": "متابعة طلب تنفيذ",
+   "price": ""
+  },
+  {
+   "id": 5010,
+   "entity": "justice",
+   "title": "الاستعلام عن طلبات التنفيذ",
+   "price": ""
+  },
+  {
+   "id": 5011,
+   "entity": "justice",
+   "title": "منازعة تنفيذ / طلب إيقاف تنفيذ",
+   "price": ""
+  },
+  {
+   "id": 5012,
+   "entity": "justice",
+   "title": "رفع إيقاف الخدمات بعد السداد",
+   "price": ""
+  },
+  {
+   "id": 5013,
+   "entity": "justice",
+   "title": "الإفصاح عن الأموال",
+   "price": ""
+  },
+  {
+   "id": 5014,
+   "entity": "justice",
+   "title": "الاعتراض على حكم (استئناف)",
+   "price": ""
+  },
+  {
+   "id": 5015,
+   "entity": "justice",
+   "title": "حجز موعد في المحكمة أو كتابة العدل",
    "price": ""
   },
   {
    "id": 1228,
    "entity": "mewa",
    "title": "إصدار سجل زراعي",
-   "price": "99 ر.س"
+   "price": "250 ر.س"
   },
   {
    "id": 1229,
    "entity": "mewa",
    "title": "طلبات المزارع العضوية",
-   "price": "99 ر.س"
+   "price": "250 ر.س"
   },
   {
    "id": 1230,
    "entity": "mewa",
    "title": "طلب عمالة زراعية جديدة",
-   "price": "99 ر.س"
+   "price": "250 ر.س"
   },
   {
    "id": 1231,
    "entity": "mewa",
    "title": "طلب عمالة زراعية مؤقتة",
-   "price": "99 ر.س"
+   "price": "250 ر.س"
   },
   {
    "id": 1232,
    "entity": "mewa",
    "title": "نقل كفالة عمالة زراعية",
-   "price": "199 ر.س"
+   "price": "280 ر.س"
   },
   {
    "id": 1233,
    "entity": "mewa",
    "title": "ترخيص نقل أو بيع مواشي",
-   "price": ""
+   "price": "250 ر.س"
   },
   {
    "id": 1234,
@@ -1581,7 +1671,7 @@
    "id": 1240,
    "entity": "musaned",
    "title": "تفويض تأشيرة عمل منزلية",
-   "price": "2,550 ر.س"
+   "price": ""
   },
   {
    "id": 1241,
